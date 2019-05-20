@@ -14,6 +14,9 @@ from torchaudio_contrib.layers import (
 from torchaudio_contrib.functional import magphase
 
 
+xfail = pytest.mark.xfail
+
+
 def _num_stft_bins(signal_len, fft_len, hop_len, pad):
     return (signal_len + 2 * pad - fft_len + hop_len) // hop_len
 
@@ -38,6 +41,7 @@ def _all_equal(x, y):
 @pytest.mark.parametrize('waveform', [
     (torch.randn(1, 100000)),
     (torch.randn(1, 2, 100000)),
+    pytest.param(torch.randn(1, 100), marks=xfail(raises=RuntimeError)),
 ])
 def test_STFT(waveform, fft_len, hop_len):
     """
